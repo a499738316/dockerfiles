@@ -3,24 +3,20 @@
 REGISTRY?=cr.loongnix.cn
 ORGANIZATION?=library
 REPOSITORY?=openjdk
-TAG?=11-buster
+TAG?=11
 
-DOWNLOAD_URL?=http://ftp.loongnix.cn/Java/openjdk11/loongson11.3.0-fx-jdk11.0.17_8-linux-loongarch64.tar.gz
-JAVA_VERSION?=11.3.0
-
-IMAGE=$(REGISTRY)/$(ORGANIZATION)/$(REPOSITORY):$(JAVA_VERSION)
-RELEASE_IMAGE=$(REGISTRY)/$(ORGANIZATION)/$(REPOSITORY):$(TAG)
+IMAGE=$(REGISTRY)/$(ORGANIZATION)/$(REPOSITORY):$(TAG)
 
 default: image
 
 image:
 	docker build \
-		-t $(IMAGE) \
-		--build-arg DOWNLOAD_URL=$(DOWNLOAD_URL) \
-		--build-arg JAVA_VERSION=$(JAVA_VERSION) \
+		-t $(IMAGE)-slim \
+		-t $(IMAGE)-slim-buster \
+		-t $(IMAGE)-buster \
 		.
 
 push:
-	docker tag $(IMAGE) $(RELEASE_IMAGE)
-	docker push $(IMAGE)
-	docker push $(RELEASE_IMAGE)
+	docker push $(IMAGE)-slim
+	docker push $(IMAGE)-slim-buster
+	docker push $(IMAGE)-buster

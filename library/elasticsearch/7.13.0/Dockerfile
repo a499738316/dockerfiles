@@ -24,10 +24,11 @@ RUN set -eux ; \
 RUN mkdir /usr/share/elasticsearch
 WORKDIR /usr/share/elasticsearch
 
-RUN curl --retry 10 -S -L --output /opt/elasticsearch.tar.gz https://github.com/Loongson-Cloud-Community/elasticsearch/releases/download/v7.13.0/elasticsearch-7.13.0-SNAPSHOT-linux-loong64-jdk11.tar.gz
+RUN curl --retry 10 -S -L --output /opt/elasticsearch.tar.gz https://github.com/Loongson-Cloud-Community/elasticsearch/releases/download/v7.13.0/elasticsearch-7.13.0-SNAPSHOT-linux-loong64-jdk11.tar.gz \
+	&& tar -zxf /opt/elasticsearch.tar.gz --strip-components=1 \
+	&& rm /opt/elasticsearch.tar.gz
 
-RUN tar -zxf /opt/elasticsearch.tar.gz --strip-components=1
-
+RUN rm -rf data/* logs/*
 # The distribution includes a `config` directory, no need to create it
 COPY config/elasticsearch.yml config/
 COPY config/log4j2.properties config/log4j2.docker.properties
